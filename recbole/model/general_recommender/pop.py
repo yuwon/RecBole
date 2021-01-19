@@ -2,6 +2,10 @@
 # @Time   : 2020/8/11 9:57
 # @Author : Zihan Lin
 # @Email  : linzihan.super@foxmail.com
+# UPDATE
+# @Time   : 2020/11/9
+# @Author : Zihan Lin
+# @Email  : zhlin@ruc.edu.cn
 
 r"""
 Pop
@@ -11,8 +15,8 @@ Pop
 
 import torch
 
-from recbole.utils import InputType, ModelType
 from recbole.model.abstract_recommender import GeneralRecommender
+from recbole.utils import InputType, ModelType
 
 
 class Pop(GeneralRecommender):
@@ -33,7 +37,6 @@ class Pop(GeneralRecommender):
         pass
 
     def calculate_loss(self, interaction):
-
         item = interaction[self.ITEM_ID]
         self.item_cnt[item, :] = self.item_cnt[item, :] + 1
 
@@ -42,10 +45,9 @@ class Pop(GeneralRecommender):
         return torch.nn.Parameter(torch.zeros(1))
 
     def predict(self, interaction):
-
         item = interaction[self.ITEM_ID]
-        result = self.item_cnt[item, :] / self.max_cnt
-        return result
+        result = torch.true_divide(self.item_cnt[item, :], self.max_cnt)
+        return result.squeeze()
 
     def full_sort_predict(self, interaction):
         batch_user_num = interaction[self.USER_ID].shape[0]
